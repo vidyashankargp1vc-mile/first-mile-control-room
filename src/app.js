@@ -244,10 +244,10 @@ function getFilteredItems(kind) {
   const items = state.links[kind] || [];
   const query = state.query.trim().toLowerCase();
   const filtered = query
-    ? items.filter((item) => `${item.title} ${item.owner} ${item.description || ''}`.toLowerCase().includes(query))
+    ? items.filter((item) => `${item.title} ${item.owner}${item.description || ''}`.toLowerCase().includes(query))
     : items;
 
-  if (kind === 'spreadsheets' || kind === 'dashboards') {
+  if (kind === 'spreadsheets') {
     return filtered.filter((item) => state.sheetFilter === 'often' ? item.frequent !== false : item.frequent === false);
   }
 
@@ -255,19 +255,18 @@ function getFilteredItems(kind) {
 }
 
 function renderResourceCard(item, kind, index) {
-  const type = kind === 'spreadsheets' ? 'spreadsheet' : 'dashboard';
   const isEditing = state.editingIndex === index && state.editingKind === kind;
 
   if (isEditing) {
     return `
       <article class="resource-card">
         <div class="resource-card-top">
-          <span class="file-icon ${item.color || 'green'}">${kind === 'spreadsheets' ? '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M9 13h6"></path><path d="M9 17h6"></path></svg>' : '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3z"></path><path d="M14 3h7v4h-7z"></path><path d="M14 11h7v10h-7z"></path><path d="M3 12h7v10H3z"></path></svg>'}</span>
+          <span class="file-icon ${item.color \vert{}\vert{} 'green'}">${kind === 'spreadsheets' ? '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M9 13h6"></path><path d="M9 17h6"></path></svg>' : '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3z"></path><path d="M14 3h7v4h-7z"></path><path d="M14 11h7v10h-7z"></path><path d="M3 12h7v10H3z"></path></svg>'}</span>
           <button class="resource-menu" data-action="save-edit" data-kind="${kind}" data-index="${index}" title="Save resource">✓</button>
         </div>
         <input class="resource-title-input" value="${escapeHtml(state.draftTitle)}" data-role="draft-title" placeholder="Resource name" />
         <input class="resource-url-input" value="${escapeHtml(state.draftUrl)}" data-role="draft-url" placeholder="Resource link" />
-        ${kind === 'spreadsheets' || kind === 'dashboards' ? `
+        ${kind === 'spreadsheets' ? `
           <select class="resource-frequency" data-role="draft-frequency">
             <option value="often" ${state.draftFrequent ? 'selected' : ''}>Often used</option>
             <option value="rarely" ${!state.draftFrequent ? 'selected' : ''}>Rarely used</option>
@@ -280,59 +279,14 @@ function renderResourceCard(item, kind, index) {
   return `
     <article class="resource-card">
       <div class="resource-card-top">
-        <span class="file-icon ${item.color || 'green'}">${kind === 'spreadsheets' ? '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M9 13h6"></path><path d="M9 17h6"></path></svg>' : '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3z"></path><path d="M14 3h7v4h-7z"></path><path d="M14 11h7v10h-7z"></path><path d="M3 12h7v10H3z"></path></svg>'}</span>
+        <span class="file-icon ${item.color \vert{}\vert{} 'green'}">${kind === 'spreadsheets' ? '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M9 13h6"></path><path d="M9 17h6"></path></svg>' : '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3z"></path><path d="M14 3h7v4h-7z"></path><path d="M14 11h7v10h-7z"></path><path d="M3 12h7v10H3z"></path></svg>'}</span>
           <button class="resource-menu" data-action="edit" data-kind="${kind}" data-url="${escapeAttribute(item.url || '')}" title="Edit resource">✎</button>
       </div>
       <h3>${escapeHtml(item.title)}</h3>
       <p>${escapeHtml(item.description || item.type)}</p>
       <div class="resource-meta"><span>${escapeHtml(item.owner === 'Operations HQ' ? 'FM Reliability' : item.owner)}</span><span>${escapeHtml(item.updated)}</span></div>
-      <a class="open-resource" href="${escapeAttribute(item.url || '#')}" target="_blank" rel="noreferrer" ${item.url ? '' : 'onclick="return false"'}>Open resource <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7"></path><path d="M8 7h9v9"></path></svg></a>
+      <a class="open-resource" href="${escapeAttribute(item.url \vert{}\vert{} '#')}" target="_blank" rel="noreferrer" ${item.url ? '' : 'onclick="return false"'}>Open resource <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7"></path><path d="M8 7h9v9"></path></svg></a>
     </article>
-  `;
-}
-
-function renderResourceSection(kind) {
-  const labels = {
-    spreadsheets: {
-      title: 'Team spreadsheets',
-      subtitle: 'Shared working files for daily operations',
-      iconClass: 'spreadsheet',
-      icon: '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M9 13h6"></path><path d="M9 17h6"></path></svg>',
-    },
-    dashboards: {
-      title: 'Team dashboards',
-      subtitle: 'Live views and performance reports',
-      iconClass: 'dashboard',
-      icon: '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3z"></path><path d="M14 3h7v4h-7z"></path><path d="M14 11h7v10h-7z"></path><path d="M3 12h7v10H3z"></path></svg>',
-    },
-    codes: {
-      title: 'Team codes',
-      subtitle: 'Automation scripts and code references',
-      iconClass: 'dashboard',
-      icon: '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 8L4 12l4 4"></path><path d="M16 8l4 4-4 4"></path><path d="M14 4l-4 16"></path></svg>',
-    },
-  };
-  const meta = labels[kind] || labels.spreadsheets;
-  const items = getFilteredItems(kind);
-  const sectionClass = state.teamSection === kind ? 'resource-section section-focus' : 'resource-section';
-  const countText = `${items.length} resources`;
-
-  return `
-    <section id="team-${kind}" class="${sectionClass}">
-      <div class="section-intro">
-        <div class="resource-title">
-          <span class="section-icon ${meta.iconClass}">${meta.icon}</span>
-          <div>
-            <h2>${meta.title}</h2>
-            <p>${meta.subtitle}</p>
-          </div>
-        </div>
-        <span class="resource-count">${countText}</span>
-      </div>
-      <div class="resource-grid">
-        ${items.length ? items.map((item) => renderResourceCard(item, kind, state.links[kind].indexOf(item))).join('') : `<div class="empty-state">No resources match “${escapeHtml(state.query)}”.</div>`}
-      </div>
-    </section>
   `;
 }
 
@@ -375,10 +329,10 @@ function renderCategoryPage(kind) {
       </div>
     </section>
 
-    ${renderUsageToggle()}
+    ${kind === 'spreadsheets' ? renderUsageToggle() : ''}
 
     <div class="workspace-toolbar">
-      <span><strong>${items.length}</strong> ${kind} resources</span>
+      <span><strong>${items.length}</strong>${kind} resources</span>
       <div class="search-box">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
         <input type="text" id="search-input" value="${escapeAttribute(state.query)}" placeholder="Search ${kind}" />
@@ -398,8 +352,8 @@ function renderTeamWorkspace() {
     <section class="workspace-hero compact">
       <div>
         <div class="eyebrow"><span class="live-dot"></span> Shared workspace</div>
-        <h1>Welcome to FM Reliability.</h1>
-        <p>Select a workspace to open its resources.</p>
+        <h1>Team Workspace</h1>
+        <p>FM Reliability operations central shelf.</p>
       </div>
     </section>
 
@@ -410,7 +364,7 @@ function renderTeamWorkspace() {
           <h2>Choose where to go</h2>
         </div>
       </div>
-      <div class="link-layout">
+      <div class="link-layout team-navigation">
         <button class="choice-card" data-action="go-page" data-page="spreadsheets">
           <span class="choice-icon green"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M9 13h6"></path><path d="M9 17h6"></path></svg></span>
           <div><strong>Spreadsheets</strong><p>Open shared operational spreadsheets.</p></div>
@@ -418,10 +372,6 @@ function renderTeamWorkspace() {
         <button class="choice-card" data-action="go-page" data-page="dashboards">
           <span class="choice-icon orange"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3z"></path><path d="M14 3h7v4h-7z"></path><path d="M14 11h7v10h-7z"></path><path d="M3 12h7v10H3z"></path></svg></span>
           <div><strong>Dashboards</strong><p>Open live operational dashboards.</p></div>
-        </button>
-        <button class="choice-card" data-action="go-page" data-page="links">
-          <span class="choice-icon green"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.07 0l2.83-2.83a5 5 0 0 0-7.07-7.07L12 4"></path><path d="M14 11a5 5 0 0 0-7.07 0L4.1 13.83a5 5 0 0 0 7.07 7.07L12 20"></path></svg></span>
-          <div><strong>Link Center</strong><p>Reach out or choose a resource page.</p></div>
         </button>
       </div>
     </section>
@@ -535,7 +485,7 @@ function renderPage() {
       const title = (document.querySelector('[data-role="draft-title"]').value || '').trim();
       const url = (document.querySelector('[data-role="draft-url"]').value || '').trim();
       const frequencyEl = document.querySelector('[data-role="draft-frequency"]');
-      const frequent = kind === 'spreadsheets' || kind === 'dashboards'
+      const frequent = kind === 'spreadsheets'
         ? (frequencyEl ? frequencyEl.value === 'often' : true)
         : true;
 
@@ -554,7 +504,7 @@ function renderPage() {
       state.editingKind = null;
       state.editingIndex = null;
       saveLinks();
-      if (kind === 'spreadsheets' || kind === 'dashboards') {
+      if (kind === 'spreadsheets') {
         state.sheetFilter = frequent ? 'often' : 'rarely';
       }
       showToast('Resource updated');
@@ -586,11 +536,6 @@ function escapeHtml(value) {
 function escapeAttribute(value) {
   return escapeHtml(value)
     .replace(/`/g, '&#96;');
-}
-
-function bindSidebarNavigation() {
-  const root = document.getElementById('page-root');
-  if (!root) return;
 }
 
 function renderLoginPage() {

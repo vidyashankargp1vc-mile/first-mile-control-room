@@ -27,3 +27,20 @@ body{background:#f5f8fc;color:#12233d}.app-shell{background:#f5f8fc}.sidebar{wid
 @media(max-width:720px){.sidebar{width:100%;padding:14px}.main-content{margin-left:0;width:100%;padding:0 14px 20px}.topbar{margin:0 -14px;padding:0 14px;display:flex;gap:10px;align-items:center}.breadcrumb{min-width:0;overflow:hidden;white-space:nowrap}.profile-menu{display:none}.link-page-title{margin-top:14px;padding:14px}.link-page-title h1{font-size:15px}.link-page-title p{font-size:11px}.admin-badge{display:none}.link-contact-card{padding:17px;border-radius:17px}.link-contact-header{align-items:flex-start}.link-contact-header h2{font-size:18px}.copy-email-button{width:100%;margin:5px 0 0}.link-detail-grid{grid-template-columns:1fr}.link-verification{display:block;line-height:1.5}.link-verification strong{display:block;margin-top:5px}.footer{padding-bottom:10px}}
 .logout-button{margin-left:auto;border:1px solid #dce6f2;border-radius:10px;background:#fff;color:#647690;padding:8px 12px;font-size:12px;font-weight:800;cursor:pointer}.logout-button:hover{border-color:#2877e8;color:#2877e8}
 @media(max-width:720px){.logout-button{padding:7px 9px;font-size:11px}.logout-button span{display:none}}
+.team-navigation{grid-template-columns:repeat(2,minmax(0,1fr))}.team-navigation .choice-card:last-child{grid-column:2;padding:12px 15px;margin-bottom:0;min-height:0}.team-navigation .choice-card:last-child .choice-icon{width:30px;height:30px}.team-navigation .choice-card:last-child strong{font-size:12px}.team-navigation .choice-card:last-child p{font-size:10px;margin-top:3px}
+@media(max-width:600px){.team-navigation{grid-template-columns:1fr}.team-navigation .choice-card:last-child{grid-column:auto}}
+
+/* Add this to the very bottom of your styles.css */
+.team-navigation {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.team-navigation .choice-card {
+  margin-bottom: 0;
+}
+
+@media(max-width: 600px) {
+  .team-navigation {
+    grid-template-columns: 1fr;
+  }
+}
