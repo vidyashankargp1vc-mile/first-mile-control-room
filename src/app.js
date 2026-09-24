@@ -494,6 +494,14 @@ function renderPage() {
     });
   });
 
+  document.querySelectorAll('[data-action="logout"]').forEach((button) => {
+    button.addEventListener('click', () => {
+      sessionStorage.removeItem(SESSION_KEY);
+      state.user = null;
+      renderLoginPage();
+    });
+  });
+
   document.querySelectorAll('[data-team-section]').forEach((item) => {
     item.addEventListener('click', () => setTeamSection(item.dataset.teamSection));
   });
@@ -657,6 +665,7 @@ async function init() {
     <main class="main-content">
       <header class="topbar">
         <div class="breadcrumb"><span>FM Reliability</span><b>/</b><strong>${state.page === 'links' ? 'Link center' : state.page === 'spreadsheets' ? 'Spreadsheets' : state.page === 'dashboards' ? 'Dashboards' : 'Team workspace'}</strong></div>
+        <button class="logout-button" data-action="logout" type="button" title="Log out">↪ <span>Log out</span></button>
       </header>
       <div id="page-root"></div>
       <footer class="footer"><span>FM Reliability workspace <b>•</b> Shared with FM Reliability</span><span><span class="sync-dot"></span>All systems operational</span></footer>
